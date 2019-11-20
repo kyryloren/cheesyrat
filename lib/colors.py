@@ -1,0 +1,8 @@
+GREEN = '\33[32m'
+YELLOW = '\33[33m'
+RED = '\33[31m'
+CYAN = '\033[1;36m'
+VIOLET = '\33[35m'
+END = '\33[0m'
+BOLD = '\33[1m'
+CURL = '\33[4m'
