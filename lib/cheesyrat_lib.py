@@ -10,7 +10,7 @@ from lib import colors
 def get_json_file():
     #Add check to see if exists. If not, create one and put data in it
     cwd = os.getcwd()
-    json_file = cwd + "/run.json"
+    json_file = cwd + "/lib/run.json"
     return json_file
 
 def warning_message(warning):
@@ -56,7 +56,7 @@ def banner():
 def main_menu_help():
     print("")
     print(colors.CYAN + "+--------------------------------------------------+")
-    print(colors.CYAN + "|" + colors.GREEN + " Main Menu Help Commands:" + colors.CYAN + "                         |")
+    print(colors.CYAN + "|" + colors.GREEN + "  Main Menu Help Commands:" + colors.CYAN + "                        |")
     print(colors.CYAN + "+--------------------------------------------------+")
     print(colors.CYAN + "|  " + colors.END + "help or ?: " + colors.GREEN + "This help message" + colors.CYAN + "                    |")
     print(colors.CYAN + "|  " + colors.END + "generate: " + colors.GREEN + "Switch to the cheesyrat generator" + colors.CYAN + "     |")
@@ -64,6 +64,20 @@ def main_menu_help():
     print(colors.CYAN + "|  " + colors.END + "clear: " + colors.GREEN + "Clear the screen" + colors.CYAN + "                         |")
     print(colors.CYAN + "|  " + colors.END + "banner: " + colors.GREEN + "Print the banner" + colors.CYAN + "                        |")
     print(colors.CYAN + "|  " + colors.END + "credits: " + colors.GREEN + "View the credits" + colors.CYAN + "                       |")
+    print(colors.CYAN + "|  " + colors.END + "quit or exit: " + colors.GREEN + "Exit the cheesyrat framework" + colors.CYAN + "      |")      
+    print(colors.CYAN + "+--------------------------------------------------+")
+    print("")
+
+def generate_menu_help():
+    print("")
+    print(colors.CYAN + "+--------------------------------------------------+")
+    print(colors.CYAN + "|" + colors.GREEN + "  Generate Menu Help Commands:" + colors.CYAN + "                    |")
+    print(colors.CYAN + "+--------------------------------------------------+")
+    print(colors.CYAN + "|  " + colors.END + "help or ?: " + colors.GREEN + "This help message" + colors.CYAN + "                    |")
+    print(colors.CYAN + "|  " + colors.END + "options: " + colors.GREEN + "List the options for the payload" + colors.CYAN + "       |")
+    print(colors.CYAN + "|  " + colors.END + "generate: " + colors.GREEN + "Generate payload" + colors.CYAN + "                      |")
+    print(colors.CYAN + "|  " + colors.END + "clear: " + colors.GREEN + "Clear the screen" + colors.CYAN + "                         |")
+    print(colors.CYAN + "|  " + colors.END + "back: " + colors.GREEN + "Return to main menu" + colors.CYAN + "                       |")
     print(colors.CYAN + "|  " + colors.END + "quit or exit: " + colors.GREEN + "Exit the cheesyrat framework" + colors.CYAN + "      |")      
     print(colors.CYAN + "+--------------------------------------------------+")
     print("")
@@ -78,15 +92,18 @@ def input_func(text):
     return Ans
 
 def credits():
-    subprocess.call(['clear'])
-    print(colors.RED + '==========================================================')
-    print(colors.END + colors.BOLD + '                         Credits:                         ')
-    print(colors.RED + '==========================================================')
-    print(colors.END + colors.BOLD + '\nSpecial Thanks To:')
-    print(colors.RED + colors.BOLD + '\nOffensive Security')
-    print(colors.VIOLET + colors.BOLD + '\nhttps://www.offensive-security.com/')
-    print(colors.YELLOW + colors.BOLD + "\nhttps://www.kali.org/")
-    print(colors.RED + colors.BOLD + "\nhttps://github.com")
+    print(colors.CYAN + "+----------------------------------------------------------+")
+    print(colors.CYAN + "|" + colors.GREEN + "  Credits:" + colors.CYAN + "                                                |")
+    print(colors.CYAN + "+----------------------------------------------------------+")
+    print(colors.CYAN + "|  " + colors.END + "This framework was created by @kyryloren" + colors.CYAN + "                |")
+    print(colors.CYAN + "|  " + colors.END + "Github: " + colors.GREEN + "https://github.com/kyryloren" + colors.CYAN + "                    |")
+    print(colors.CYAN + "+----------------------------------------------------------+")
+    print(colors.CYAN + "|" + colors.GREEN + "  Notable Mensions:" + colors.CYAN + "                                       |")
+    print(colors.CYAN + "+----------------------------------------------------------+")      
+    print(colors.CYAN + "|  " + colors.END + "Offensive Security: " + colors.GREEN + "https://www.offensive-security.com" + colors.CYAN + "  |")
+    print(colors.CYAN + "|  " + colors.END + "Kali Linux: " + colors.GREEN + "https://www.kali.org" + colors.CYAN + "                        |")
+    print(colors.CYAN + "|  " + colors.END + "Fat Rat: " + colors.GREEN + "https://github.com/StreetSec/FatRat" + colors.CYAN + "            |")
+    print(colors.CYAN + "+----------------------------------------------------------+")
     print("")
 
 def append_runjson(context, name_to_append):
