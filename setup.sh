@@ -1,6 +1,5 @@
 #!/bin/bash
 
-green=''
 red='\033[0;31m'
 green='\033[0;32m'
 white='\033[1;37m'
