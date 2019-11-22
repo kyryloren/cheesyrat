@@ -7,10 +7,15 @@ import platform
 import json
 from lib import colors
 
-def get_json_file():
+def get_run_json_file():
     #Add check to see if exists. If not, create one and put data in it
     cwd = os.getcwd()
     json_file = cwd + "/lib/run.json"
+    return json_file
+
+def get_config_json_file():
+    cwd = os.getcwd()
+    json_file = cwd + "/lib/config.json"
     return json_file
 
 def warning_message(warning):
@@ -106,16 +111,38 @@ def credits():
     print(colors.CYAN + "+----------------------------------------------------------+")
     print("")
 
-def append_runjson(context, name_to_append):
-    with open(get_json_file()) as json_file:
+def payload_options():
+    print("")
+    print("Payload options (cheesyrat/windows/reverse_tcp)")
+    print("")
+    data =[['Name', 'Current Setting', 'Required', 'Description'], ['----', '---------------', '--------', '-----------'], 
+    ['LHOST', append_json("lhost", get_config_json_file()), 'yes', 'The connect back address'], 
+    ['LPORT', append_json("lport", get_config_json_file()), 'yes', 'The connect back port']]
+    col_width = [max(map(len, col)) for col in zip(*data)]
+    for row in data:
+        print("  ".join((val.ljust(width) for val, width in zip(row, col_width))))
+    print("")
+
+def append_json(name_to_append, file):
+    with open(file) as json_file:
         data = json.load(json_file)
-        for p in data[context]:
-            return p[name_to_append]
+        return data[name_to_append]
+
+def update_json(name_to_append, value, file):
+    jsonFile = open(file, "r")
+    data = json.load(jsonFile)
+    jsonFile.close()
+
+    data[name_to_append] = value
+
+    jsonFile = open(file, 'w+')
+    jsonFile.write(json.dumps(data))
+    jsonFile.close()
 
 def exit_function():
-    if append_runjson("session_info", "is_sessions_open") == "false":
+    if append_json("is_sessions_open", get_run_json_file()) == "false":
         print(colors.GREEN + "\n\nThank you for shopping with cheesyrat. Come again soon :)\n\n" + colors.END)
         sys.exit()
-    elif append_runjson("session_info", "is_sessions_open") == "true":
+    elif append_json("is_sessions_open", get_run_json_file()) == "true":
         error_message("Cannot exit, there are sessions open.", exit=False)
 
