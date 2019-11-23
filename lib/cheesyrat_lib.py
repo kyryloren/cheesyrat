@@ -1,32 +1,84 @@
 import subprocess
 import os
+import re
 import string
 import time
 import sys
 import platform
 import json
+import logging
+import socket
 from lib import colors
 
-def get_run_json_file():
-    #Add check to see if exists. If not, create one and put data in it
+def create_json_files():
     cwd = os.getcwd()
-    json_file = cwd + "/lib/run.json"
-    return json_file
+    global run_json
+    global config_json
+    run_json = cwd + "/lib/run.json"
+    config_json = cwd + "/lib/config.json"
+    if not os.path.isfile(run_json):
+        plain_message(colors.GREEN, " [*] Runtime json file not found. Creating one for you...", False)
+        with open(run_json, 'w') as run_file:
+            run_data = {'is_sessions_open': "false",
+                        'sessions_open': "0"}
+            json.dump(run_data, run_file)
+            time.sleep(1)
+            plain_message(colors.GREEN, " [*] Created runtime json file!", False, False)
+    else:
+        plain_message(colors.GREEN, " [*] Found runtime json file.", False, False)
+
+    if not os.path.isfile(config_json):
+        plain_message(colors.GREEN, " [*] Config json file not found. Creating one for you...", False)
+        with open(config_json, 'w') as config_file:
+            config_data = {'lhost': "",
+                           "lport": "4444"}
+            json.dump(config_data, config_file)
+            time.sleep(1)
+            plain_message(colors.GREEN, " [*] Created config json file!", False, False)
+    else:
+        plain_message(colors.GREEN, " [*] Found json config file.", False, False)
+
+def get_run_json_file():
+    if os.path.isfile(run_json):
+        return run_json
+    else:
+        error_message("Could not get the json run file! Please force quit and restart the framework.", False)
 
 def get_config_json_file():
-    cwd = os.getcwd()
-    json_file = cwd + "/lib/config.json"
-    return json_file
+    if os.path.isfile(config_json):
+        return config_json
+    else:
+        error_message("Could not get the json config file! Please force quit and restart the framework.", False)
+
+def delete_config_and_run():
+    # do what the function says here
+    pass
 
 def warning_message(warning):
     print(colors.RED + "\n[!] Warning: " + warning + colors.END + "\n")
 
 def error_message(error, exit):
     if exit == True:
-        print(colors.RED + "\n[!] Error has occured: " + error + "Exiting..." + colors.END + "\n")
+        print(colors.RED + "\n[!] An error has occured: " + str(error) + "Exiting..." + colors.END + "\n")
         sys.exit()
     elif exit == False:
-        print(colors.RED + "\n[!] Error has occured: " + error + colors.END + "\n")
+        print(colors.RED + "\n[!] An error has occured: " + str(error) + colors.END + "\n")
+
+def success_message(success, indent):
+    if indent == True:
+        print(colors.GREEN + "\n[*] Success: " + success + "\n")
+    elif indent == False:
+        print(colors.GREEN + "[*] Success: " + success)
+
+def plain_message(color, message, indent_top=False, indent_bottom=False):
+    if indent_top == True and indent_bottom == False:
+        print("\n" + color + message + colors.END)
+    elif indent_bottom == True and indent_top == False:
+        print(color + message + colors.END + "\n")
+    elif indent_top == True and indent_bottom == True:
+        print("\n" + color + message + colors.END + "\n")
+    elif indent_top == False and indent_bottom == False:
+        print(color + message + colors.END)
 
 def clear():
     subprocess.Popen( "cls" if platform.system() == "Windows" else "clear", shell=True)
@@ -58,6 +110,24 @@ def banner():
     print('                             ')
     print('                             ')
 
+def checking_banner():
+    print("")
+    print(colors.VIOLET + " +------------------------------------------------------------------------------------------------------------------+")
+    print(colors.VIOLET + " |" + colors.CYAN + "  .--,       .--,     " + colors.YELLOW + "    _________  .__                      __    .__" + colors.VIOLET + "                                           |")
+    print(colors.VIOLET + " |" + colors.CYAN + " ( (  \.---./  ) )    " + colors.YELLOW + "    \_   ___ \ |  |__    ____    ____  |  | __|__|  ____     ____" + colors.VIOLET + "                           |")
+    print(colors.VIOLET + " |" + colors.CYAN + "  '.__/" + colors.END + "o   o" + colors.CYAN + "\__.'     " + colors.YELLOW + "    /    \  \/ |  |  \ _/ __ \ _/ ___\ |  |/ /|  | /    \   / ___\\" + colors.VIOLET + "                          |")
+    print(colors.VIOLET + " |" + colors.CYAN + "     {=  ^  =}        " + colors.YELLOW + "    \     \____|   Y  \\\\  ___/ \  \___ |    < |  ||   |  \ / /_/  >" + colors.VIOLET + "                         |")
+    print(colors.VIOLET + " |" + colors.CYAN + "      >  -  <         " + colors.YELLOW + "     \______  /|___|  / \___  > \___  >|__|_ \|__||___|  / \___  /" + colors.VIOLET + "                          |")
+    print(colors.VIOLET + " |" + colors.CYAN + "     /       \        " + colors.YELLOW + "    ________\/_     \/      \/.__   \/      \/         \/ /_____/                    __" + colors.VIOLET + "     |")
+    print(colors.VIOLET + " |" + colors.CYAN + "    //       \\\\       " + colors.YELLOW + "    \_   _____/  ____  ___  __|__|_______   ____    ____    _____    ____    ____  _/  |_" + colors.VIOLET + "   |")
+    print(colors.VIOLET + " |" + colors.CYAN + "   //|   .   |\\\\      " + colors.YELLOW + "     |    __)_  /    \ \  \/ /|  |\_  __ \ /  _ \  /    \  /     \ _/ __ \  /    \ \   __\\" + colors.VIOLET + "  |")
+    print(colors.VIOLET + " |" + colors.CYAN + "   " + '"' + "'\       /'" + '"_.-~^`' + "'-." + colors.YELLOW + "  |        \|   |  \ \   / |  | |  | \/(  <_> )|   |  \|  Y Y  \\\\  ___/ |   |  \ |  |  " + colors.VIOLET + "  |")
+    print(colors.VIOLET + " |" + colors.CYAN + "      \  _  /--'     `" + colors.YELLOW + "    /_______  /|___|  /  \_/  |__| |__|    \____/ |___|  /|__|_|  / \___  >|___|  / |__|" + colors.VIOLET + "    |")
+    print(colors.VIOLET + " |" + colors.CYAN + "    ___)( )(___       " + colors.YELLOW + "            \/      \/                                 \/       \/      \/      \/" + colors.VIOLET + "          |")
+    print(colors.VIOLET + " |" + colors.CYAN + "   (((__) (__)))                                  " + colors.YELLOW + "Created by " + colors.CYAN + "kyryloren" + colors.VIOLET + "                                            |")
+    print(colors.VIOLET + " +------------------------------------------------------------------------------------------------------------------+")
+    print("")
+
 def main_menu_help():
     print("")
     print(colors.CYAN + "+--------------------------------------------------+")
@@ -79,13 +149,22 @@ def generate_menu_help():
     print(colors.CYAN + "|" + colors.GREEN + "  Generate Menu Help Commands:" + colors.CYAN + "                    |")
     print(colors.CYAN + "+--------------------------------------------------+")
     print(colors.CYAN + "|  " + colors.END + "help or ?: " + colors.GREEN + "This help message" + colors.CYAN + "                    |")
-    print(colors.CYAN + "|  " + colors.END + "options: " + colors.GREEN + "List the options for the payload" + colors.CYAN + "       |")
-    print(colors.CYAN + "|  " + colors.END + "generate: " + colors.GREEN + "Generate payload" + colors.CYAN + "                      |")
+    print(colors.CYAN + "|  " + colors.END + "options/info: " + colors.GREEN + "List the options for the payload" + colors.CYAN + "  |")
+    print(colors.CYAN + "|  " + colors.END + "set LHOST [ip]: " + colors.GREEN + "Set the connect back address" + colors.CYAN + "    |")
+    print(colors.CYAN + "|  " + colors.END + "set LPORT [port]: " + colors.GREEN + "Set the connect back port" + colors.CYAN + "     |")
+    print(colors.CYAN + "|  " + colors.END + "run/generate/build: " + colors.GREEN + "Generate payload" + colors.CYAN + "            |")
     print(colors.CYAN + "|  " + colors.END + "clear: " + colors.GREEN + "Clear the screen" + colors.CYAN + "                         |")
     print(colors.CYAN + "|  " + colors.END + "back: " + colors.GREEN + "Return to main menu" + colors.CYAN + "                       |")
     print(colors.CYAN + "|  " + colors.END + "quit or exit: " + colors.GREEN + "Exit the cheesyrat framework" + colors.CYAN + "      |")      
     print(colors.CYAN + "+--------------------------------------------------+")
     print("")
+
+def check():
+    clear()
+    checking_banner()
+    create_json_files()
+    print("\n Starting framework...")
+    time.sleep(3)
 
 def input_func(text):
     py_version=platform.python_version()
@@ -93,7 +172,7 @@ def input_func(text):
     if py_version[0] == "3":
         Ans = input(text)
     else:
-        print(error_message("Looks like you're not running Python 3!", exit=True))
+        error_message("Looks like you're not running Python 3!", True)
     return Ans
 
 def credits():
@@ -113,36 +192,49 @@ def credits():
 
 def payload_options():
     print("")
-    print("Payload options (cheesyrat/windows/reverse_tcp)")
+    print(colors.END + " Payload options => " + colors.YELLOW + "(cheesyrat/windows/reverse_tcp)")
     print("")
     data =[['Name', 'Current Setting', 'Required', 'Description'], ['----', '---------------', '--------', '-----------'], 
     ['LHOST', append_json("lhost", get_config_json_file()), 'yes', 'The connect back address'], 
     ['LPORT', append_json("lport", get_config_json_file()), 'yes', 'The connect back port']]
     col_width = [max(map(len, col)) for col in zip(*data)]
     for row in data:
-        print("  ".join((val.ljust(width) for val, width in zip(row, col_width))))
+        print(colors.END + " " + " ".join((val.ljust(width) for val, width in zip(row, col_width))))
     print("")
 
 def append_json(name_to_append, file):
     with open(file) as json_file:
         data = json.load(json_file)
-        return data[name_to_append]
+        return str(data[name_to_append])
 
 def update_json(name_to_append, value, file):
-    jsonFile = open(file, "r")
-    data = json.load(jsonFile)
-    jsonFile.close()
-
-    data[name_to_append] = value
-
-    jsonFile = open(file, 'w+')
-    jsonFile.write(json.dumps(data))
-    jsonFile.close()
+    try:
+        jsonFile = open(file, "r")
+        data = json.load(jsonFile)
+        jsonFile.close()
+        data[name_to_append] = value
+        jsonFile = open(file, 'w+')
+        jsonFile.write(json.dumps(data))
+        jsonFile.close()
+    except Exception as e:
+        error_message(e, False)
 
 def exit_function():
-    if append_json("is_sessions_open", get_run_json_file()) == "false":
-        print(colors.GREEN + "\n\nThank you for shopping with cheesyrat. Come again soon :)\n\n" + colors.END)
-        sys.exit()
-    elif append_json("is_sessions_open", get_run_json_file()) == "true":
-        error_message("Cannot exit, there are sessions open.", exit=False)
+    plain_message(colors.GREEN, "Trying to exit...", True, False)
+    try:
+        if append_json("is_sessions_open", get_run_json_file()) == "false":
+            plain_message(colors.GREEN, "Cleaning up...", False, False)
+            if os.path.isfile(run_json):
+                os.remove(run_json)
+            if os.path.isfile(config_json):
+                os.remove(config_json)
+            plain_message(colors.GREEN, "Thank you for shopping with cheesyrat. Come again soon. :)", False, True)
+            try:
+                sys.exit(0)
+            except SystemExit:
+                os._exit(0)
+        elif append_json("is_sessions_open", get_run_json_file()) == "true":
+            error_message("Cannot exit, there are sessions open.", False)
+    except Exception as e:
+        error_message(e, False)
 
