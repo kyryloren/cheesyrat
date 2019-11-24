@@ -2,13 +2,9 @@
 #coding: utf-8
 #written by kyryloren. https://github.com/kyryloren/cheesyrat
 
-import os
-import time
 import signal
 import socket
-import logging
 import readline
-import threading
 from lib import colors
 from lib import autocomplete
 from lib import cheesyrat_lib
