@@ -1,6 +1,6 @@
 import random
 
-class Complete(object):
+class Complete():
     def __init__(self, options):
         self.options = sorted(options)
     
@@ -15,4 +15,4 @@ class Complete(object):
         try:
             return self.matches[state]
         except IndexError:
-            return None 
+            return None
