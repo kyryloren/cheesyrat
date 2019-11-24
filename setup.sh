@@ -1,5 +1,6 @@
 #!/bin/bash
 
+green=''
 red='\033[0;31m'
 green='\033[0;32m'
 white='\033[1;37m'
@@ -75,62 +76,53 @@ update () {
 }
 
 python_setup () {
-    if [ $(dpkg-query -W -f='${Status}' python3 2>/dev/null | grep -c "ok installed") -eq 0 ];
-    then
+    if [ $(dpkg-query -W -f='${Status}' python3 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         printf "${orange}[!] Python 3 installation not found. Installing it for you...${reset}\n"
         apt-get -qq -y install python3
         sleep 3
         printf "\n\n${green}[*] Done!${reset}\n"
         clear_screen
-    elif [ $(dpkg-query -W -f='${Status}' python3 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
+    elif [ $(dpkg-query -W -f='${Status}' python3 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
         printf "${green}[*] Python 3 found. Continuing setup...${reset}\n"
         sleep 3
     fi
 
-    if [ $(dpkg-query -W -f='${Status}' python3-pip 2>/dev/null | grep -c "ok installed") -eq 0 ];
-    then
+    if [ $(dpkg-query -W -f='${Status}' python3-pip 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         printf "${orange}[!] Pip for Python 3 not found. Installing it for you...${reset}\n"
         apt-get -qq -y install python3-pip
         sleep 3
         printf "\n\n${green}[*] Done!${reset}\n"
         clear_screen
-    elif [ $(dpkg-query -W -f='${Status}' python3-pip 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
+    elif [ $(dpkg-query -W -f='${Status}' python3-pip 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
         printf "${green}[*] Pip for Python 3 found. Continuing setup...${reset}\n"
         sleep 3
     fi
 
-    if [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 0 ];
-    then
+    if [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         printf "${orange}[!] Wget installation not found. How do you not have this...?? Installing it for you...${reset}\n"
         apt-get -qq -y install wget
         sleep 3
         printf "\n\n${green}[*] Done!${reset}\n"
         clear_screen
-    elif [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
+    elif [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
         printf "${green}[*] Wget found, whew. Checking wine...${reset}\n"
         sleep 3
     fi
 }
 
 wine_setup () {
-    if [ $(dpkg-query -W -f='${Status}' wine 2>/dev/null | grep -c "ok installed") -eq 0 ];
-    then
+    if [ $(dpkg-query -W -f='${Status}' wine 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         printf "${orange}[!] Wine installation not found. Installing it for you...${reset}\n"
         apt-get -qq -y install wine
         sleep 3
         printf "\n\n${green}[*] Done!${reset}\n"
         clear_screen
-    elif [ $(dpkg-query -W -f='${Status}' wine 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
+    elif [ $(dpkg-query -W -f='${Status}' wine 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
         printf "${green}[*] Wine found. Setting it up...${reset}\n"
         sleep 3
     fi
 
-    if [ ! -d "/tmp/cheesyrat" ];
-    then
+    if [ ! -d "/tmp/cheesyrat" ]; then
         mkdir /tmp/cheesyrat
     fi
     dpkg --add-architecture i386
@@ -162,6 +154,9 @@ python_setup_wine () {
 
 pip_setup () {
     wine pip install pyinstaller
+    wine pip3 install pyinstaller
+    pip3 install crypto
+    pip3 install sockets
 }
 
 done_setup () {
@@ -169,8 +164,7 @@ done_setup () {
     printf "${green}[*] Finishing and cleaning up...${reset}"
     sleep 3
     cd ~
-    if [ -d "/tmp/cheesyrat/" ];
-    then
+    if [ -d "/tmp/cheesyrat/" ]; then
         rm -r /tmp/cheesyrat/
     fi
     clear_screen
