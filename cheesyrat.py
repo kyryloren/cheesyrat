@@ -23,7 +23,7 @@ def complete_menu():
     answ=True
     while answ:
         ans = ""
-        menu_kw = ["help", "generate", "listen", "credits", "banner", "clear", "exit", "quit"]
+        menu_kw = ["help", "generate", "listen", "credits", "banner", "clear", "exit", "quit", "force quit"]
         completer = autocomplete.Complete(menu_kw)
         readline.set_completer(completer.complete)
         readline.parse_and_bind('tab: complete')
@@ -50,6 +50,8 @@ def complete_menu():
             cheesyrat_lib.exit_function()
         elif ans.lower() == "quit":
             cheesyrat_lib.exit_function()
+        elif ans.lower() == "force quit":
+            cheesyrat_lib.force_quit()
         elif ans == "":
             pass
         else:
@@ -57,7 +59,7 @@ def complete_menu():
 
 def generate_menu():
     while True:
-        generate_kw = ["help", "clear", "back", "exit", "quit", "options", "info", "set", "run", "generate", "build", "run"]
+        generate_kw = ["help", "clear", "back", "exit", "quit", "options", "info", "set", "run", "generate", "build", "run", "force quit"]
         completer = autocomplete.Complete(generate_kw)
         readline.set_completer(completer.complete)
         readline.parse_and_bind('tab: complete')
@@ -103,6 +105,8 @@ def generate_menu():
             cheesyrat_lib.exit_function()
         elif cmd.lower() == "quit":
             cheesyrat_lib.exit_function()
+        elif cmd.lower() == "force quit":
+            cheesyrat_lib.force_quit()
         elif cmd == "":
             pass
         else:
