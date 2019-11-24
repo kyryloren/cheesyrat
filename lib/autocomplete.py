@@ -1,5 +1,3 @@
-import random
-
 class Complete():
     def __init__(self, options):
         self.options = sorted(options)
