@@ -68,5 +68,5 @@ __Tested On:__ [![Kali)](https://www.google.com/s2/favicons?domain=https://www.k
 **Please submit any issues that you find__
 
 ## Credits:
-- Logo icons made by <a href="https://www.flaticon.com" target="_blank">Flaticon</a> from <a href="https://www.flaticon.com" target="_blank">Flaticon</a>
+- Logo icons made by www.flaticon.com from www.flaticon.com
 - Code written by kyryloren with some help from stackoverflow ;p
