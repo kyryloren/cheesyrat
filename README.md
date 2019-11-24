@@ -67,5 +67,4 @@ __Tested On:__ [![Kali)](https://www.google.com/s2/favicons?domain=https://www.k
 ## Bugs :beetle::
 **Please submit any issues that you find__
 
-## Credits:
-__ *Logo icons made by www.flaticon.com from www.flaticon.com
+Logo icons made by www.flaticon.com from www.flaticon.com
