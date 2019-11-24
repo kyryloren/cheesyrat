@@ -267,3 +267,24 @@ def force_quit():
             error_message("Invalid choice. Try again.", False)
 
 def exit_function():
+    plain_message(colors.GREEN, "Trying to exit...", True, False)
+    try:
+        if os.path.isfile(run_json):
+            if append_json("is_sessions_open", get_run_json_file()) == "false":
+                plain_message(colors.GREEN, "Cleaning up...", False, False)
+                if os.path.isfile(run_json):
+                    os.remove(run_json)
+                if os.path.isfile(config_json):
+                    os.remove(config_json)
+                plain_message(colors.GREEN, "Thank you for shopping with cheesyrat. Come again soon. :)", False, True)
+                try:
+                    sys.exit(0)
+                except SystemExit:
+                    os._exit(0)
+            elif append_json("is_sessions_open", get_run_json_file()) == "true":
+                error_message("Cannot exit, there are sessions open.", False)
+        elif not os.path.isfile(run_json):
+            error_message("That's wierd... We couldn't find the run time json file... If you don't have sessions open please use 'force quit' to exit", False)
+            warning_message("If you get this error again next time you try to quit, please take a screenshot of your terminal and submit as a bug.")
+    except Exception as e:
+        error_message(e, False)
