@@ -72,7 +72,7 @@ def generate_menu():
                         cheesyrat_lib.update_json("lhost_payload", lhost, cheesyrat_lib.get_config_json_file())
                         print(" LHOST => " + lhost)
                     except socket.error:
-                        cheesyrat_lib.error_message("Invalid IP address. The IP is probably not up.", False))
+                        cheesyrat_lib.error_message("Invalid IP address. The IP is probably not up.", False)
                 else:
                     cheesyrat_lib.update_json("lhost_payload", lhost, cheesyrat_lib.get_config_json_file())
                     print(" LHOST => " + lhost)
