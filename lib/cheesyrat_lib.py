@@ -22,9 +22,9 @@ def create_json_files():
     if not os.path.isfile(config_json):
         with open(config_json, 'w') as config_file:
             config_data = {'lhost_payload': "",
-                           "lport_payload": "4444",
+                           "lport_payload": 4444,
                            "lhost_listener": "",
-                           "lport_listener": "4444"}
+                           "lport_listener": 4444}
             json.dump(config_data, config_file)
             time.sleep(1)
 
