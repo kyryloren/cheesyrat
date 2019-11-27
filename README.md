@@ -51,8 +51,7 @@ Cheesyrat is an easy tool used to generate a peristent backdoor for remote acces
 **NOTE**
 - Installation must be done with superuser, AKA root. This is usually default on Kali Linux. If you know that your linux distribution needs sudo to run, please add the prefix ```sudo``` for all your commands to run as sudo, or change the roor user before beginning.
 1. ```sudo git clone https://github.com/kyryloren/cheesyrat.git```
-2. ```sudo cd cheesyrat/config/ && chmod +x ./setup.sh```
-3. ```sudo ./setup.sh```
+2. Install with one command: ```sudo git clone https://github.com/kyryloren/cheesyrat.git && cd cheesyrat/ && sudo chmod +x ./cheesyrat.py && cd config/ && sudo chmod +x config-update.py setup.sh && sudo ./setup.sh```
 
 ## How to Use :question::
 1. ```cd cheesyrat/```
