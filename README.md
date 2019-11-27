@@ -79,9 +79,9 @@ __Tested On:__ [![Kali)](https://www.google.com/s2/favicons?domain=https://www.k
 ## Bugs :beetle::
 **Please submit any issues that you find
 
-<p align="center">
+## Buy me a coffee <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg">
+<p>
   <a href="https://www.buymeacoffee.com/kyryloren">
-    <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg">
   </a>
 </p>
 
