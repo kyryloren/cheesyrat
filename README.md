@@ -86,3 +86,4 @@ https://www.buymeacoffee.com/kyryloren
 ## Credits:
 - Logo icons made by www.flaticon.com from www.flaticon.com
 - Code written by kyryloren with some help from stackoverflow ;p
+- Setup and config scripts taken and modified from Veil (https://github.com/Veil-Framework/Veil)
