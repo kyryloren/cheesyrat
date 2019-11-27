@@ -79,11 +79,9 @@ __Tested On:__ [![Kali)](https://www.google.com/s2/favicons?domain=https://www.k
 ## Bugs :beetle::
 **Please submit any issues that you find
 
-## Buy me a coffee <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg">
-<p>
-  <a href="https://www.buymeacoffee.com/kyryloren">
-  </a>
-</p>
+## Buy me a coffee
+Thank you for the support :)
+https://www.buymeacoffee.com/kyryloren
 
 ## Credits:
 - Logo icons made by www.flaticon.com from www.flaticon.com
