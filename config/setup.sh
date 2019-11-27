@@ -851,8 +851,5 @@ echo -e "\n\n[*] ${BOLD}If you have any errors${RESET} running Cheesyrat, run: '
 
 echo -e "\n\n[*] ${GREEN}Done!${RESET}\n"
 
-touch /usr/bin/cheesyrat
-
-
 exit 0
 
