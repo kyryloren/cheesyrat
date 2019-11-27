@@ -22,9 +22,9 @@ def create_json_files():
     cwd = os.getcwd()
     global run_json
     global config_json
-    run_json = cwd + "/lib/run.json"
-    config_json = cwd + "/lib/config.json"
-    plain_message(colors.GREEN, " [*] Creating runtime files...")
+    run_json = settings.HANDLER_PATH + "run.json"
+    config_json = settings.HANDLER_PATH + "config.json"
+    plain_message(colors.GREEN, " [*] Checking runtime files...")
     if not os.path.isfile(run_json):
         with open(run_json, 'w') as run_file:
             run_data = {'is_sessions_open': "false",
@@ -276,24 +276,14 @@ def update_json(name_to_append, value, file):
 def force_quit():
     while True:
         cmd = input('\n' + colors.YELLOW + "Are you sure you want to exit??? Your sessions WILL NOT be restored (y/n) > ")
-        if cmd.lower() == 'y':
+        if cmd.lower() == 'y' or cmd.lower() == 'yes':
             plain_message(colors.YELLOW, "If you say so... But next time don't exit like this.", False, True)
             if os.path.isfile(config_json):
                 os.remove(config_json)
             if os.path.isfile(run_json):
                 os.remove(run_json)
             sys.exit(1)
-        elif cmd.lower() == 'yes':
-            plain_message(colors.YELLOW, "If you say so... But next time don't exit like this.", False, True)
-            if os.path.isfile(config_json):
-                os.remove(config_json)
-            if os.path.isfile(run_json):
-                os.remove(run_json)
-            sys.exit(1)
-        elif cmd.lower() == 'n':
-            plain_message(colors.GREEN, "Good choice kid...", False, True)
-            break
-        elif cmd.lower() == 'no':
+        elif cmd.lower() == 'n' or cmd.lower() == 'no':
             plain_message(colors.GREEN, "Good choice kid...", False, True)
             break
         else:
@@ -304,12 +294,23 @@ def exit_function():
     try:
         if os.path.isfile(run_json):
             if append_json("is_sessions_open", get_run_json_file()) == "false":
-                plain_message(colors.GREEN, "Cleaning up...", False, False)
-                if os.path.isfile(run_json):
-                    os.remove(run_json)
-                if os.path.isfile(config_json):
-                    os.remove(config_json)
-                plain_message(colors.GREEN, "Thank you for shopping with cheesyrat. Come again soon. :)", False, True)
+                if settings.SAVE_HANDLERS_ON_EXIT.lower() == "true":
+                    if os.path.isfile(config_json):
+                        plain_message(colors.GREEN, "Payload and handler values saved.")
+                        plain_message(colors.GREEN, "Cleaning up...", False, False)
+                        if os.path.isfile(run_json):
+                            os.remove(run_json)
+                        plain_message(colors.GREEN, "Thank you for shopping with cheesyrat. Come again soon. :)", False, True)
+                elif settings.SAVE_HANDLERS_ON_EXIT.lower() == "false":
+                        plain_message(colors.GREEN, "Payload and handler values will not be saved.")
+                        plain_message(colors.GREEN, "Cleaning up...", False, False)
+                        if os.path.isfile(run_json):
+                            os.remove(run_json)
+                        if os.path.isfile(config_json):
+                            os.remove(config_json)
+                        plain_message(colors.GREEN, "Thank you for shopping with cheesyrat. Come again soon. :)", False, True)
+                else:
+                    warning_message("Soomething is wrong with your config file. Please execute './cheesyrat.py --config' to reset defaults")
                 try:
                     sys.exit(0)
                 except SystemExit:
@@ -327,7 +328,7 @@ def setup_framework():
         if os.path.exists("/usr/share/cheesyrat/config/setup.sh"):
             os.system('/usr/share/cheesyrat/config/setup.sh -f -s')
         else:
-            print("\n[!] An error has occured: Kali is missing %s\n" % ("/usr/share/veil/config/setup.sh"))
+            print("\n[!] An error has occured: Kali is missing %s\n" % ("/usr/share/cheesyrat/config/setup.sh"))
             os.system('./config/setup.sh -f -s')
     else:
         os.system('./config/setup.sh -f -s')
@@ -347,10 +348,14 @@ def config_framework():
 
 def clean_payloads():
     print("\n[*] Cleaning %s" % (settings.PAYLOAD_SOURCE_PATH))
-    os.system('rm -f %s/*.*' % (settings.PAYLOAD_SOURCE_PATH))
+    os.system('rm -f %s/*.py' % (settings.PAYLOAD_SOURCE_PATH))
 
     print("[*] Cleaning %s" % (settings.PAYLOAD_COMPILED_PATH))
     os.system('rm -f %s/*.exe' % (settings.PAYLOAD_COMPILED_PATH))
+    os.system('rm -f %s/*.bat' % (settings.PAYLOAD_COMPILED_PATH))
+
+    print("[*] Cleaning %s" % (settings.HANDLER_PATH))
+    os.system('rm -f %s/*.json' % (settings.HANDLER_PATH))
 
     print("[*] Cleaning ./tools/vt-notify/results.log")
     os.system('rm -f ./tools/vt-notify/results.log')
