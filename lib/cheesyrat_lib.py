@@ -26,13 +26,13 @@ def create_json_files():
     config_json = cwd + "/lib/config.json"
     plain_message(colors.GREEN, " [*] Creating runtime files...")
     if not os.path.isfile(run_json):
-        with open(run_json, 'r+') as run_file:
+        with open(run_json, 'w') as run_file:
             run_data = {'is_sessions_open': "false",
                         'sessions_open': "0"}
             json.dump(run_data, run_file)
             time.sleep(1)
     if not os.path.isfile(config_json):
-        with open(config_json, 'r+') as config_file:
+        with open(config_json, 'w') as config_file:
             config_data = {'lhost_payload': "",
                            "lport_payload": 4444,
                            "lhost_listener": "",
