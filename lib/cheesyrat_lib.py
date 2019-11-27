@@ -14,6 +14,10 @@ except ImportError:
     print(colors.RED + "\n[!] An error has occured: Can't import /etc/cheesyrat/settings.py. Run: %s\n" % ( os.path.abspath( "./config/config-update.py")))
     sys.exit()
 
+def check_root():
+    if not os.geteuid() == 0:
+        sys.exit("\nOnly root can run this script\n")
+
 def create_json_files():
     cwd = os.getcwd()
     global run_json
