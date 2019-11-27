@@ -175,7 +175,7 @@ if __name__ == "__main__":
     cheesyrat.add_argument('--config', action="store_true", help="Regenerate the Cheesyrat framework configuration file")
     cheesyrat.add_argument('--setup', action="store_true", help="Tun the setup file and regenerate the Cheesyrat framework configuration file")
     cheesyrat.add_argument('--version', action="store_true", help="Displays version and quits")
-    cheesyrat.add_argument('--clean', action="store_true", help="Clean out payloads")
+    cheesyrat.add_argument('--clean', action="store_true", help="Clean out payloads and handlers")
     args = parser.parse_args()
 
     if args.h:
