@@ -166,6 +166,8 @@ def listener_menu():
             cheesyrat_lib.warning_message("Invalid command. Type 'help' for help.")
 
 if __name__ == "__main__":
+    cheesyrat_lib.check_root()
+
     parser = argparse.ArgumentParser(add_help=False, description='Cheesyrat is an easy tool used to generate a peristent backdoor for remote access to a Windows machine.')
     parser.add_argument('-h', '-?', '--h', '-help', '--help', action="store_true", help=argparse.SUPPRESS)
 
