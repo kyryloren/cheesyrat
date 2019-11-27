@@ -53,7 +53,7 @@ Cheesyrat is an easy tool used to generate a peristent backdoor for remote acces
 
 Install with one command: 
 ```
-sudo git clone https://github.com/kyryloren/cheesyrat.git && cd cheesyrat/ && sudo chmod +x ./cheesyrat.py && cd config/ && sudo chmod +x config-update.py setup.sh && sudo ./setup.sh
+sudo git clone https://github.com/kyryloren/cheesyrat.git && cd cheesyrat/ && sudo chmod +x ./cheesyrat.py /lib/autocomplete.py /lib/cheesyrat_lib.py /lib/colors.py && cd config/ && sudo chmod +x config-update.py setup.sh && sudo ./setup.sh
 ```
 
 ## How to Use :question::
