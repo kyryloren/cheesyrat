@@ -77,7 +77,7 @@ sudo git clone https://github.com/kyryloren/cheesyrat.git && cd cheesyrat/ && su
 **dev@kyryloorlov.com**
 
 ## Bugs :beetle::
-**Please submit any issues that you find
+**Please submit any issues that you find**
 
 ## Buy me a coffee
 Thank you for the support :)
