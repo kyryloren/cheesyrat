@@ -6,6 +6,14 @@ import platform
 import json
 from lib import colors
 
+# Try to find and import the settings.py config file
+try:
+    sys.path.append("/etc/cheesyrat/")
+    import settings
+except ImportError:
+    print(colors.RED + "\n[!] An error has occured: Can't import /etc/cheesyrat/settings.py. Run: %s\n" % ( os.path.abspath( "./config/config-update.py")))
+    sys.exit()
+
 def create_json_files():
     cwd = os.getcwd()
     global run_json
@@ -45,7 +53,7 @@ def delete_config_and_run():
     pass
 
 def warning_message(warning):
-    print(colors.RED + "\n[!] Warning: " + warning + colors.END + "\n")
+    print(colors.YELLOW + "\n[!] Warning: " + warning + colors.END + "\n")
 
 def error_message(error, exit):
     if exit == True:
@@ -74,8 +82,29 @@ def clear():
     subprocess.Popen( "cls" if platform.system() == "Windows" else "clear", shell=True)
     time.sleep(0.1)
 
+def print_version():
+    print('')
+    print('    ,--,  .-. .-.,---.  ,---.  ,---.     .---..-.   .-.,---.    .--.  _______ ')
+    print("  .' .')  | | | || .-'  | .-'  | .-'    ( .-._)\ \_/ )/| .-.\  / /\ \|__   __|")
+    print("  |  |(_) | `-' || `-.  | `-.  | `-.   (_) \    \   (_)| `-'/ / /__\ \ )| |")
+    print("  \  \    | .-. || .-'  | .-'  | .-'   _  \ \    ) (   |   (  |  __  |(_) |")
+    print("   \  `-. | | |)||  `--.|  `--.|  `--.( `-'  )   | |   | |\ \ | |  |)|  | |")
+    print("    \____\/(  (_)/( __.'/( __.'/( __.' `----'   /(_|   |_| \)\|_|  (_)  `-'")
+    print('       (__)   (__)   (__)   (__)             (__)        (__)')    
+    print("")
+    print(colors.END + colors.BOLD + '            [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']   Backdoor Generator for Remote Access  [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.END + colors.BOLD + '            [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + colors.BOLD + '          Created by:' + colors.RED + ' kyryloren          ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.END + colors.BOLD + '            [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + colors.BOLD + '             Version:' + colors.RED + ' 1.0.0' + colors.END + colors.BOLD + '              [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.END + colors.BOLD + '            [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + colors.BOLD + '      Github:' + colors.RED + colors.BOLD + ' https://git.io/Jeoco' + colors.END + colors.BOLD + '       [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.END + colors.BOLD + '            [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + ' https://www.buymeacoffee.com/kyryloren/' + colors.END + colors.BOLD + ' [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.END + colors.BOLD + '            [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']                                         [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.END + colors.BOLD + '            [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']        Rats can eat cheese too!         [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.END + colors.BOLD + '            [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + '] ._____________________________________. [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.END + colors.BOLD + '            \_.-------------------------------------------._/' + colors.END)
+    print('')
+
 def banner():
-    print('                    ')
+    print('')
     print(colors.GREEN + colors.BOLD + '             /|         ,  ')
     print('           ,///        /|  ')
     print('          // //     ,///   ')
@@ -92,7 +121,7 @@ def banner():
     print(colors.GREEN + colors.BOLD + '        //  |   |  \\       ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + colors.BOLD + '          Created by:' + colors.RED + ' kyryloren          ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
     print(colors.GREEN + colors.BOLD + '      ,/_| ' + colors.END + colors.BOLD + '0' + colors.GREEN + colors.BOLD + '| _ | ' + colors.END + colors.BOLD + '0' + colors.GREEN + colors.BOLD + '|_\,    ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + colors.BOLD + '             Version:' + colors.RED + ' 1.0.0' + colors.END + colors.BOLD + '              [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
     print(colors.GREEN + colors.BOLD + '    /`    `"=.v.="`    `\\  ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + colors.BOLD + '      Github:' + colors.RED + colors.BOLD + ' https://git.io/Jeoco' + colors.END + colors.BOLD + '       [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
-    print(colors.GREEN + colors.BOLD + '   /`    _."{_,_}"._    `\\ ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + colors.BOLD + '      Follow me on Twitter:' + colors.RED + ' @0V01d' + colors.END + colors.BOLD + '       [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
+    print(colors.GREEN + colors.BOLD + '   /`    _."{_,_}"._    `\\ ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']' + colors.VIOLET + ' https://www.buymeacoffee.com/kyryloren/' + colors.END + colors.BOLD + ' [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
     print(colors.GREEN + colors.BOLD + '  `/`  ` \  |||  / `  `\`  ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']                                         [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
     print(colors.GREEN + colors.BOLD + '   `",_  \\=^~^=//  _,"`    ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']        Rats can eat cheese too!         [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
     print(colors.GREEN + colors.BOLD + '       "=,\"-=-"/,=         ' + colors.END + colors.BOLD + '[' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + '] ._____________________________________. [' + colors.GREEN + colors.BOLD + '--' + colors.END + colors.BOLD + ']')
@@ -288,3 +317,39 @@ def exit_function():
             warning_message("If you get this error again next time you try to quit, please take a screenshot of your terminal and submit as a bug.")
     except Exception as e:
         error_message(e, False)
+
+def setup_framework():
+    if settings.OPERATING_SYSTEM == "Kali":
+        if os.path.exists("/usr/share/cheesyrat/config/setup.sh"):
+            os.system('/usr/share/cheesyrat/config/setup.sh -f -s')
+        else:
+            print("\n[!] An error has occured: Kali is missing %s\n" % ("/usr/share/veil/config/setup.sh"))
+            os.system('./config/setup.sh -f -s')
+    else:
+        os.system('./config/setup.sh -f -s')
+        input('\n\nCheesyrat has ran setup.sh, press enter to continue')
+
+def config_framework():
+    if settings.OPERATING_SYSTEM == "Kali":
+        print(os.getcwd())
+        if os.path.exists("/usr/share/cheesyrat/config/config-update.py"):
+            os.system('cd /usr/share/cheesyrat/config/; ./config-update.py')
+        else:
+            print("\n[!] An error has occured: Kali is missing %s\n" % ("/usr/share/cheesyrat/config/config-update.py"))
+            os.system('cd ./config/; ./config-update.py')
+    else:
+        os.system('cd ./config/; ./config-update.py')
+    input('\n\nCheesyrat has reconfigured, press enter to continue')
+
+def clean_payloads():
+    print("\n[*] Cleaning %s" % (settings.PAYLOAD_SOURCE_PATH))
+    os.system('rm -f %s/*.*' % (settings.PAYLOAD_SOURCE_PATH))
+
+    print("[*] Cleaning %s" % (settings.PAYLOAD_COMPILED_PATH))
+    os.system('rm -f %s/*.exe' % (settings.PAYLOAD_COMPILED_PATH))
+
+    print("[*] Cleaning ./tools/vt-notify/results.log")
+    os.system('rm -f ./tools/vt-notify/results.log')
+
+    success_message("Finished cleaning payloads!", True)
+    time.sleep(2)
