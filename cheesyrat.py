@@ -2,8 +2,10 @@
 #coding: utf-8
 #written by kyryloren. https://github.com/kyryloren/cheesyrat
 
+from sys import exit
 import signal
 import socket
+import argparse
 import readline
 from lib import colors
 from lib import autocomplete
@@ -63,31 +65,37 @@ def generate_menu():
             cheesyrat_lib.generate_menu_help()
         elif cmd.lower() == "options" or cmd.lower() == "info":
             cheesyrat_lib.payload_options()
-        elif cmd.lower()[0:9] == "set lhost":
-            lhost = cmd[10:]
-            try:
-                if socket.gethostbyname(lhost) == lhost:
+        elif cmd.startswith('set'):
+            if len(cmd.split()) == 3:
+                choice = cmd.split()[1]
+                if choice.lower() == "lhost":
+                    lhost = cmd.split()[2]
                     try:
-                        socket.inet_aton(lhost)
-                        cheesyrat_lib.update_json("lhost_payload", lhost, cheesyrat_lib.get_config_json_file())
-                        print(" LHOST => " + lhost)
-                    except socket.error:
-                        cheesyrat_lib.error_message("Invalid IP address. The IP is probably not up.", False)
+                        if socket.gethostbyname(lhost) == lhost:
+                            try:
+                                socket.inet_aton(lhost)
+                                cheesyrat_lib.update_json("lhost_payload", lhost, cheesyrat_lib.get_config_json_file())
+                                print(" LHOST => " + lhost)
+                            
+                            except socket.error:
+                                cheesyrat_lib.error_message("Invalid IP address. The IP is probably not up.", False)
+                        else:
+                            cheesyrat_lib.update_json("lhost_payload", lhost, cheesyrat_lib.get_config_json_file())
+                            print(" LHOST => " + lhost)
+                    except:
+                        cheesyrat_lib.error_message("Invalid or misspelled host address.", False)
+                elif choice.lower() == "lport":
+                    try:
+                        lport = int(cmd.split()[2])
+                        if 1 <= lport <= 65535:
+                            cheesyrat_lib.update_json("lport_payload", int(lport), cheesyrat_lib.get_config_json_file())
+                            print(" LPORT => " + str(lport))
+                        elif not 1 <= lport <= 65535:
+                            cheesyrat_lib.error_message(str(lport) + " is not a valid port number.", False)
+                    except ValueError:
+                        cheesyrat_lib.error_message("The port provided is invalid", False)
                 else:
-                    cheesyrat_lib.update_json("lhost_payload", lhost, cheesyrat_lib.get_config_json_file())
-                    print(" LHOST => " + lhost)
-            except:
-                cheesyrat_lib.error_message("Invalid or misspelled host address.", False)
-        elif cmd.lower()[0:9] == "set lport":
-            try:
-                lport = int(cmd[10:])
-                if 1 <= lport <= 65535:
-                    cheesyrat_lib.update_json("lport_payload", int(lport), cheesyrat_lib.get_config_json_file())
-                    print(" LPORT => " + str(lport))
-                elif not 1 <= lport <= 65535:
-                    cheesyrat_lib.error_message(str(lport) + "is not a valid port number.", False)
-            except ValueError:
-                cheesyrat_lib.error_message("The port provided is invalid", False)
+                    cheesyrat_lib.warning_message("Invalid option after 'set'. Valid options are 'LHOST' and 'LPORT'.")
         elif cmd.lower() == "generate" or cmd.lower() == "build" or cmd.lower() == "run":
             print("generate payload")
         elif cmd.lower() == "clear":
@@ -118,31 +126,36 @@ def listener_menu():
             break
         elif listener.lower() == "options" or listener.lower() == "info":
             cheesyrat_lib.listener_options()
-        elif listener.lower()[0:9] == "set lhost":
-            lhost = listener[10:]
-            try:
-                if socket.gethostbyname(lhost) == lhost:
+        elif listener.startswith('set'):
+            if len(listener.split()) == 3:
+                choice = listener.split()[1]
+                if choice.lower() == "lhost":
+                    lhost = listener.split()[2]
                     try:
-                        socket.inet_aton(lhost)
-                        cheesyrat_lib.update_json("lhost_listener", lhost, cheesyrat_lib.get_config_json_file())
-                        print(" LHOST => " + lhost)
-                    except socket.error:
-                        cheesyrat_lib.error_message("Invalid IP address. The IP is probably not up.", False)
+                        if socket.gethostbyname(lhost) == lhost:
+                            try:
+                                socket.inet_aton(lhost)
+                                cheesyrat_lib.update_json("lhost_listener", lhost, cheesyrat_lib.get_config_json_file())
+                                print(" LHOST => " + lhost)
+                            except socket.error:
+                                cheesyrat_lib.error_message("Invalid IP address. The IP is probably not up.", False)
+                        else:
+                            cheesyrat_lib.update_json("lhost_listener", lhost, cheesyrat_lib.get_config_json_file())
+                            print(" LHOST => " + lhost)
+                    except:
+                        cheesyrat_lib.error_message("Invalid or misspelled host address.", False)
+                elif choice.lower() == "lport":
+                    try:
+                        lport = int(listener.split()[2])
+                        if 1 <= lport <= 65535:
+                            cheesyrat_lib.update_json("lport_listener", int(lport), cheesyrat_lib.get_config_json_file())
+                            print(" LPORT => " + str(lport))
+                        elif not 1 <= lport <= 65535:
+                            cheesyrat_lib.error_message(str(lport) + " is not a valid port number.", False)
+                    except ValueError:
+                        cheesyrat_lib.error_message("The port provided is invalid", False)
                 else:
-                    cheesyrat_lib.update_json("lhost_listener", lhost, cheesyrat_lib.get_config_json_file())
-                    print(" LHOST => " + lhost)
-            except:
-                cheesyrat_lib.error_message("Invalid or misspelled host address.", False)
-        elif listener.lower()[0:9] == "set lport":
-            try:
-                lport = int(listener[10:])
-                if 1 <= lport <= 65535:
-                    cheesyrat_lib.update_json("lport_listener", int(lport), cheesyrat_lib.get_config_json_file())
-                    print(" LPORT => " + str(lport))
-                elif not 1 <= lport <= 65535:
-                    cheesyrat_lib.error_message(str(lport) + "is not a valid port number.", False)
-            except ValueError:
-                cheesyrat_lib.error_message("The port provided is invalid", False)
+                    cheesyrat_lib.warning_message("Invalid option after 'set'. Valid options are 'LHOST' and 'LPORT'.")
         elif listener.lower() == "exit" or listener.lower() == "quit":
             cheesyrat_lib.exit_function()
         elif listener.lower() == "force quit":
@@ -153,6 +166,34 @@ def listener_menu():
             cheesyrat_lib.warning_message("Invalid command. Type 'help' for help.")
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(add_help=False, description='Cheesyrat is an easy tool used to generate a peristent backdoor for remote access to a Windows machine.')
+    parser.add_argument('-h', '-?', '--h', '-help', '--help', action="store_true", help=argparse.SUPPRESS)
+
+    cheesyrat = parser.add_argument_group('[*] Cheesyrat options')
+    cheesyrat.add_argument('--config', action="store_true", help="Regenerate the Cheesyrat framework configuration file")
+    cheesyrat.add_argument('--setup', action="store_true", help="Tun the setup file and regenerate the Cheesyrat framework configuration file")
+    cheesyrat.add_argument('--version', action="store_true", help="Displays version and quits")
+    cheesyrat.add_argument('--clean', action="store_true", help="Clean out payloads")
+    args = parser.parse_args()
+
+    if args.h:
+        parser.print_help()
+        exit()
+    if args.version:
+        cheesyrat_lib.print_version()
+        exit()
+    if args.setup:
+        cheesyrat_lib.setup_framework()
+        exit()
+    if args.config:
+        cheesyrat_lib.config_framework()
+        exit()
+    if args.clean:
+        cheesyrat_lib.clean_payloads()
+        exit()
+    else:
+        pass
+
     cheesyrat_lib.check()
     signal.signal(signal.SIGINT, handler)
     complete_menu()
