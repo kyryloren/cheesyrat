@@ -88,6 +88,22 @@ def generateConfig(options):
     config += 'PAYLOAD_COMPILED_PATH="' + compiled_path +'"\n\n'
     print( "[*] PAYLOAD_COMPILED_PATH = " + compiled_path )
 
+    # Handler path
+    handler_path = os.path.expanduser( options["HANDLER_PATH"] )
+    config += '# Where to generate a msf handler script\n'
+    config += 'HANDLER_PATH="' + handler_path + '"\n\n'
+    print( "[*] HANDLER_PATH = " + handler_path )
+
+    # Shoud we save handlers on exit
+    config += '# Should we save the runtime handlers before we exit?\n'
+    config += 'SAVE_HANDLERS_ON_EXIT="' + options['SAVE_HANDLERS_ON_EXIT'] + '"\n\n'
+    print("[*] SAVE_HANDLERS_ON_EXIT = " + options['SAVE_HANDLERS_ON_EXIT'])
+
+    # Create the output compiled path if it doesn't exist
+    if not os.path.exists( handler_path ):
+        os.makedirs( handler_path )
+        print( "[*] Path Created: '" + handler_path )
+
     # Create the output source path if it doesn't exist
     if not os.path.exists( source_path ):
         os.makedirs( source_path )
@@ -108,7 +124,7 @@ def generateConfig(options):
         f.write(config)
         f.close()
         os.chmod("/etc/cheesyrat/settings.py", 0o0755)
-        print("[*] Configuration File Written To: '/etc/cheesyrat/settings.py'\n")
+        print("\n\n[*] Configuration File Written To: '/etc/cheesyrat/settings.py'\n")
     else:
         print("[!] ERROR: PLATFORM NOT CURRENTLY SUPPORTED")
         sys.exit()
@@ -131,14 +147,16 @@ if __name__ == '__main__':
         # General options
         options["OPERATING_SYSTEM"] = "Linux"
         options["PYINSTALLER_PATH"] = "/var/lib/cheesyrat/PyInstaller-3.2.1/" # via /config/setup.sh
-        options["TEMP_PATH"] = "/tmp/"
+        options["TEMP_PATH"] = "/tmp/cheesyrat/"
         options["WINEPREFIX"] = "/var/lib/cheesyrat/wine/"
         CHEESYRAT_PATH = "/".join( os.getcwd().split( "/" )[:-1] ) + "/"
         options["CHEESYRAT_PATH"] = CHEESYRAT_PATH
 
         # Cheesyrat specific options
+        options["HANDLER_PATH"] = "/var/lib/cheesyrat/output/handlers/"
         options["PAYLOAD_COMPILED_PATH"] = "/var/lib/cheesyrat/output/compiled/"
         options["PAYLOAD_SOURCE_PATH"] = "/var/lib/cheesyrat/output/source/"
+        options['SAVE_HANDLERS_ON_EXIT'] = "true"
 
         # Kali
         if issue.startswith( ("Kali", "Parrot") ):
@@ -155,7 +173,7 @@ if __name__ == '__main__':
         if not options["TEMP_PATH"].endswith('/'):
             options["TEMP_PATH"] += "/"
 
-        # Check the paths are correct (VEIL_PATH)
+        # Check the paths are correct (CHEESYRAT_PATH)
         while not os.path.isdir( options["CHEESYRAT_PATH"] ):
             print( "\n[*] Can't find the cheesyrat path?   Run: %s --force --silent" % ( os.path.abspath("./config/setup.sh" ) ) )
             path = str(path)
