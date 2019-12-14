@@ -1,9 +1,9 @@
-import subprocess
 import os
 import time
 import sys
-import platform
 import json
+import platform
+import subprocess
 from lib import colors
 
 # Try to find and import the settings.py config file
@@ -18,39 +18,60 @@ def check_root():
     if not os.geteuid() == 0:
         sys.exit("\nOnly root can run this script\n")
 
-def create_json_files():
-    cwd = os.getcwd()
-    global run_json
-    global config_json
-    run_json = settings.HANDLER_PATH + "run.json"
-    config_json = settings.HANDLER_PATH + "config.json"
-    plain_message(colors.GREEN, " [*] Checking runtime files...")
+global config_json
+global run_json
+run_json = settings.HANDLER_PATH + "run.json"
+config_json = settings.HANDLER_PATH + "config.json"
+
+def create_json_files(force=False):
+    if force == True:
+        if os.path.isfile(run_json):
+            os.remove(run_json)
+        if os.path.isfile(config_json):
+            os.remove(config_json)
+    else:
+        pass
     if not os.path.isfile(run_json):
         with open(run_json, 'w') as run_file:
             run_data = {'is_sessions_open': "false",
                         'sessions_open': "0"}
             json.dump(run_data, run_file)
-            time.sleep(1)
     if not os.path.isfile(config_json):
         with open(config_json, 'w') as config_file:
             config_data = {'lhost_payload': "",
                            "lport_payload": 4444,
                            "lhost_listener": "",
-                           "lport_listener": 4444}
+                           "lport_listener": 4444,
+                           "listen_proxy": "",
+                           'number_decoy_processes': "2",
+                           "temp_port": "443",
+                           "cmd_timeout": "10",
+                           "compile_admin": "false"}
             json.dump(config_data, config_file)
-            time.sleep(1)
 
 def get_run_json_file():
-    if os.path.isfile(run_json):
-        return run_json
-    else:
-        error_message("Could not get the json run file! Please force quit and restart the framework.", False)
+    try:
+        if os.path.isfile(run_json):
+            return run_json
+        elif not os.path.isfile(run_json):
+            create_json_files()
+            return run_json
+        else:
+            error_message("Could not get the json run file! Please force quit and restart the framework.", False)
+    except:
+        error_message("There was an error loading framework in line 22 of main lib file. Please report to author on github.")
 
 def get_config_json_file():
-    if os.path.isfile(config_json):
-        return config_json
-    else:
-        error_message("Could not get the json config file! Please force quit and restart the framework.", False)
+    try:
+        if os.path.isfile(config_json):
+            return config_json
+        elif not os.path.isfile(config_json):
+            create_json_files()
+            return config_json
+        else:
+            error_message("Could not get the json config file! Please force quit and restart the framework.", False)
+    except:
+        error_message("There was an error loading framework in line 22 of main lib file. Please report to author on github.")
 
 def delete_config_and_run():
     # do what the function says here
@@ -173,9 +194,9 @@ def generate_menu_help():
     print(colors.CYAN + "|" + colors.GREEN + "  Generate Menu Help Commands:" + colors.CYAN + "                    |")
     print(colors.CYAN + "+--------------------------------------------------+")
     print(colors.CYAN + "|  " + colors.END + "help or ?: " + colors.GREEN + "This help message" + colors.CYAN + "                    |")
-    print(colors.CYAN + "|  " + colors.END + "options/info: " + colors.GREEN + "List the options for the payload" + colors.CYAN + "  |")
-    print(colors.CYAN + "|  " + colors.END + "set LHOST [ip]: " + colors.GREEN + "Set the connect back address" + colors.CYAN + "    |")
-    print(colors.CYAN + "|  " + colors.END + "set LPORT [port]: " + colors.GREEN + "Set the connect back port" + colors.CYAN + "     |")
+    print(colors.CYAN + "|  " + colors.END + "options: " + colors.GREEN + "List the options for the payload" + colors.CYAN + "       |")
+    print(colors.CYAN + "|  " + colors.END + "info: " + colors.GREEN + "List info for payload and options" + colors.CYAN + "         |")
+    print(colors.CYAN + "|  " + colors.END + "set LHOST [ip]: " + colors.GREEN + "Set an option for the payload" + colors.CYAN + "   |")
     print(colors.CYAN + "|  " + colors.END + "run/generate/build: " + colors.GREEN + "Generate payload" + colors.CYAN + "            |")
     print(colors.CYAN + "|  " + colors.END + "clear: " + colors.GREEN + "Clear the screen" + colors.CYAN + "                         |")
     print(colors.CYAN + "|  " + colors.END + "back: " + colors.GREEN + "Return to main menu" + colors.CYAN + "                       |")
@@ -191,8 +212,7 @@ def listener_menu_help():
     print(colors.CYAN + "+--------------------------------------------------+")
     print(colors.CYAN + "|  " + colors.END + "help or ?: " + colors.GREEN + "This help message" + colors.CYAN + "                    |")
     print(colors.CYAN + "|  " + colors.END + "options/info: " + colors.GREEN + "List the options for the listener" + colors.CYAN + " |")
-    print(colors.CYAN + "|  " + colors.END + "set LHOST [ip]: " + colors.GREEN + "Set the host address" + colors.CYAN + "            |")
-    print(colors.CYAN + "|  " + colors.END + "set LPORT [port]: " + colors.GREEN + "Set the host connection port" + colors.CYAN + "  |")
+    print(colors.CYAN + "|  " + colors.END + "set [OPTION]: " + colors.GREEN + "Set an option for the listener" + colors.CYAN + "    |")
     print(colors.CYAN + "|  " + colors.END + "run/listen: " + colors.GREEN + "Start the listener" + colors.CYAN + "                  |")
     print(colors.CYAN + "|  " + colors.END + "clear: " + colors.GREEN + "Clear the screen" + colors.CYAN + "                         |")
     print(colors.CYAN + "|  " + colors.END + "back: " + colors.GREEN + "Return to main menu" + colors.CYAN + "                       |")
@@ -201,12 +221,34 @@ def listener_menu_help():
     print(colors.CYAN + "+--------------------------------------------------+")
     print("")
 
+def sessions_menu_help():
+    print("")
+    print(colors.CYAN + "+--------------------------------------------------+")
+    print(colors.CYAN + "|" + colors.GREEN + "  Session Help Commands:" + colors.CYAN + "                          |")
+    print(colors.CYAN + "+--------------------------------------------------+")
+    print(colors.CYAN + "|  " + colors.END + "sessions -h: " + colors.GREEN + "This help message" + colors.CYAN + "                  |")
+    print(colors.CYAN + "|  " + colors.END + "sessions -l: " + colors.GREEN + "List current open sessions" + colors.CYAN + "         |")
+    print(colors.CYAN + "|  " + colors.END + "sessions -i [#]: " + colors.GREEN + "Interact with session in shell" + colors.CYAN + " |")
+    print(colors.CYAN + "+--------------------------------------------------+")
+    print("")
+
+def proxy_menu_help():
+    print("")
+    print(colors.CYAN + "+---------------------------------------------------------------------------+")
+    print(colors.CYAN + "|" + colors.GREEN + "  Proxy Help Commands:" + colors.CYAN + "                                                     |")
+    print(colors.CYAN + "+---------------------------------------------------------------------------+")
+    print(colors.CYAN + "|  " + colors.END + "set proxy -h: " + colors.GREEN + "This help message" + colors.CYAN + "                                           |")
+    print(colors.CYAN + "|  " + colors.END + "set proxy [SOCKS5, SOCKS4, HTTP] [HOST] [PORT]: " + colors.GREEN + "List current open sessions" + colors.CYAN + "|")
+    print(colors.CYAN + "|  " + colors.END + "sessions -i [#]: " + colors.GREEN + "Interact with session in shell" + colors.CYAN + "                           |")
+    print(colors.CYAN + "+---------------------------------------------------------------------------+")
+    print("")
+
 def check():
     clear()
     checking_banner()
     create_json_files()
     print("\n Starting framework...")
-    time.sleep(3)
+    time.sleep(1)
 
 def input_func(text):
     py_version=platform.python_version()
@@ -234,14 +276,23 @@ def credits():
 
 def payload_options():
     print("")
-    print(colors.END + " Payload options => " + colors.YELLOW + "(cheesyrat/windows/reverse_tcp)")
+    print(colors.END + " Payload options => " + colors.YELLOW + "(windows/basic_reverse_tcp)")
     print("")
     data =[['Name', 'Current Setting', 'Required', 'Description'], ['----', '---------------', '--------', '-----------'], 
-    ['LHOST', append_json("lhost_payload", get_config_json_file()), 'yes', 'The connect back address'], 
-    ['LPORT', append_json("lport_payload", get_config_json_file()), 'yes', 'The connect back port']]
+    ['LHOST', append_json("lhost_payload", get_config_json_file()), 'yes', 'The connect back address for the backdoor'], 
+    ['LPORT', append_json("lport_payload", get_config_json_file()), 'yes', 'The connect back port for the backdoor'],
+    ['TEMPPORT', append_json("temp_port", get_config_json_file()), 'yes', 'The temporary port to send payload '],
+    ['DECOYPROC', append_json("number_decoy_processes", get_config_json_file()), 'no', 'The number of decoy process (max: 4)'],
+    ['CMDTIMEOUT', append_json("cmd_timeout", get_config_json_file()), 'yes', 'Amount of timeout for each command to send (max: 50)'],
+    ['COMPILEADMIN', append_json("compile_admin", get_config_json_file()), 'no', 'Should the compiled file ask for admin privilege right away?']]
     col_width = [max(map(len, col)) for col in zip(*data)]
     for row in data:
         print(colors.END + " " + " ".join((val.ljust(width) for val, width in zip(row, col_width))))
+    print("")
+
+def payload_info():
+    payload_options()
+    print(" The cheseyrat windows/basic_reverse_tcp is a payload which gives the attacker a remote reverse connection\n to the a victim's windows machine. This payload is basic as it is coded in python and doesn't have any\n special memory injection abilities. To hide itself, the virus encrypts itself and copies it to differeny\n locations on the machine, all with different encryption patterns. It also launches various decoy\n processes to try to avoid AV detection.\n\n The machine must be running Windows XP SP2 or higher.")
     print("")
 
 def listener_options():
@@ -250,7 +301,8 @@ def listener_options():
     print("")
     data =[['Name', 'Current Setting', 'Required', 'Description'], ['----', '---------------', '--------', '-----------'], 
     ['LHOST', append_json("lhost_listener", get_config_json_file()), 'yes', 'The connect back address'], 
-    ['LPORT', append_json("lport_listener", get_config_json_file()), 'yes', 'The connect back port']]
+    ['LPORT', append_json("lport_listener", get_config_json_file()), 'yes', 'The connect back port'],
+    ['Proxy', append_json("", get_config_json_file()), 'no', 'Proxy address and port']]
     col_width = [max(map(len, col)) for col in zip(*data)]
     for row in data:
         print(colors.END + " " + " ".join((val.ljust(width) for val, width in zip(row, col_width))))
@@ -273,15 +325,16 @@ def update_json(name_to_append, value, file):
     except Exception as e:
         error_message(e, False)
 
+def add_json(name_to_append, value, push_file):
+    with open(push_file, 'w') as json_file:
+        data = {name_to_append: value}
+        json.dump(data, push_file)
+
 def force_quit():
     while True:
         cmd = input('\n' + colors.YELLOW + "Are you sure you want to exit??? Your sessions WILL NOT be restored (y/n) > ")
         if cmd.lower() == 'y' or cmd.lower() == 'yes':
             plain_message(colors.YELLOW, "If you say so... But next time don't exit like this.", False, True)
-            if os.path.isfile(config_json):
-                os.remove(config_json)
-            if os.path.isfile(run_json):
-                os.remove(run_json)
             sys.exit(1)
         elif cmd.lower() == 'n' or cmd.lower() == 'no':
             plain_message(colors.GREEN, "Good choice kid...", False, True)
@@ -336,7 +389,6 @@ def setup_framework():
 
 def config_framework():
     if settings.OPERATING_SYSTEM == "Kali":
-        print(os.getcwd())
         if os.path.exists("/usr/share/cheesyrat/config/config-update.py"):
             os.system('cd /usr/share/cheesyrat/config/; ./config-update.py')
         else:
@@ -344,6 +396,7 @@ def config_framework():
             os.system('cd ./config/; ./config-update.py')
     else:
         os.system('cd ./config/; ./config-update.py')
+    create_json_files(force=True)
     input('\n\nCheesyrat has reconfigured, press enter to continue')
 
 def clean_payloads():
@@ -362,3 +415,10 @@ def clean_payloads():
 
     success_message("Finished cleaning payloads!", True)
     time.sleep(2)
+
+def get_max_connections():
+    try:
+        max_connections = int(settings.MAX_REVERSE_CONNECTIONS)
+        return max_connections
+    except ValueError:
+        error_message("The value for MAX_REVERSE_CONNECTIONS in the config is not set to a number. Please type './cheesyrat --config' to reset to defaults.", False)
