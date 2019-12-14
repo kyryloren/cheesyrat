@@ -18,10 +18,10 @@ def check_root():
     if not os.geteuid() == 0:
         sys.exit("\nOnly root can run this script\n")
 
-global config_json
-global run_json
+
 run_json = settings.HANDLER_PATH + "run.json"
 config_json = settings.HANDLER_PATH + "config.json"
+
 
 def create_json_files(force=False):
     if force == True:
@@ -59,7 +59,7 @@ def get_run_json_file():
         else:
             error_message("Could not get the json run file! Please force quit and restart the framework.", False)
     except:
-        error_message("There was an error loading framework in line 22 of main lib file. Please report to author on github.")
+        error_message("There was an error loading framework in line 22 of main lib file. Please report to author on github.", True)
 
 def get_config_json_file():
     try:
