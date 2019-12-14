@@ -45,7 +45,6 @@ Cheesyrat is an easy tool used to generate a peristent backdoor for remote acces
 - [x] Shutdowm or restart victim's computer
 - [x] Retrieve stored web browser passwords, cookies, and accounts
 - [x] Keylogger
-- [x] More to be expected
 
 ## How to Install :arrow_down::
 **NOTE**
